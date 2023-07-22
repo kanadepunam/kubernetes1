@@ -1,31 +1,31 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name:  MYAPP
+  name:  myapp
   namespace: default
   labels:
-    app:  MYAPP
+    app:  myapp
 spec:
   selector:
     matchLabels:
-      app: MYAPP
-  replicas: 1
+      app: myapp
+  replicas: 3
   strategy:
-    rollingUpdate:
+     type: RollingUpdate
       maxSurge: 25%
       maxUnavailable: 25%
     type: RollingUpdate
   template:
     metadata:
       labels:
-        app:  MYAPP
+        app:  myapp
     spec:
       # initContainers:
         # Init containers are exactly like regular containers, except:
           # - Init containers always run to completion.
           # - Each init container must complete successfully before the next one starts.
       containers:
-      - name:  MYAPP
+      - name:  myapp
         image: azacrshared.azurecr.io/walmarttpositoty:20220612.07
         resources:
           requests:
@@ -55,11 +55,11 @@ spec:
         - name: DB_HOST
           valueFrom:
             configMapKeyRef:
-              name: MYAPP
+              name: myapp
               key: DB_HOST
         ports:
         - containerPort:  80
-          name:  MYAPP
+          name:  myapp
         volumeMounts:
         - name: localtime
           mountPath: /etc/localtime
